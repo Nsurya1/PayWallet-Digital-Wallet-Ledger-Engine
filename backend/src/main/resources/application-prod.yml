@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL}}
+    username: ${DB_USER:${SPRING_DATASOURCE_USERNAME:postgres}}
+    password: ${DB_PASSWORD:${SPRING_DATASOURCE_PASSWORD:}}
     hikari:
       maximum-pool-size: 5
   data:
@@ -16,9 +16,9 @@ spring:
 
 paywallet:
   jwt:
-    secret: ${PAYWALLET_JWT_SECRET}      # no default: app must fail if missing
+    secret: ${PAYWALLET_JWT_SECRET}      # App fails cleanly at startup if missing
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
   outbox:
     publisher:
       enabled: ${OUTBOX_ENABLED:false}
@@ -26,6 +26,8 @@ paywallet:
     consumer:
       enabled: ${KAFKA_CONSUMER_ENABLED:false}
       auto-startup: ${KAFKA_CONSUMER_ENABLED:false}
+    topic:
+      auto-create: ${KAFKA_AUTO_CREATE_TOPICS:false}
 
 management:
   endpoint:
