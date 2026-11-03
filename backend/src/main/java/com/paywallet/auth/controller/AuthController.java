@@ -1,8 +1,13 @@
 package com.paywallet.auth.controller;
 
 import com.paywallet.auth.dto.AuthResponse;
+import com.paywallet.auth.dto.ChangePasswordRequest;
+import com.paywallet.auth.dto.ForgotPasswordRequest;
+import com.paywallet.auth.dto.ForgotPasswordResponse;
 import com.paywallet.auth.dto.LoginRequest;
+import com.paywallet.auth.dto.MessageResponse;
 import com.paywallet.auth.dto.RegisterRequest;
+import com.paywallet.auth.dto.ResetPasswordRequest;
 import com.paywallet.auth.dto.UserSummary;
 import com.paywallet.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,13 +18,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Authentication", description = "User registration, authentication, and JWT lifecycle management")
+@Tag(name = "Authentication", description = "User registration, authentication, and credential lifecycle management")
 public class AuthController {
 
     private final AuthService authService;
@@ -48,5 +54,27 @@ public class AuthController {
     public ResponseEntity<UserSummary> getCurrentUser() {
         UserSummary summary = authService.getCurrentUserProfile();
         return ResponseEntity.ok(summary);
+    }
+
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Request password reset", description = "Generates a time-limited 6-digit OTP reset code for a given username or email")
+    public ResponseEntity<ForgotPasswordResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        ForgotPasswordResponse response = authService.forgotPassword(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "Reset password using OTP code", description = "Validates the reset OTP code and updates user's credentials with BCrypt encryption")
+    public ResponseEntity<MessageResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        MessageResponse response = authService.resetPassword(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/change-password")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Change password for authenticated user", description = "Updates credentials for currently signed in user after verifying current password")
+    public ResponseEntity<MessageResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        MessageResponse response = authService.changePassword(request);
+        return ResponseEntity.ok(response);
     }
 }

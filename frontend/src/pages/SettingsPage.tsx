@@ -22,6 +22,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import { webhookApi } from '@/api/webhookApi';
+import { authApi } from '@/api/authApi';
 import { WebhookSubscription } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -87,7 +88,7 @@ export function SettingsPage() {
     toast.success('Profile details updated successfully');
   };
 
-  const handleUpdatePassword = (e: React.FormEvent) => {
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentPassword) {
       toast.error('Current password is required');
@@ -101,15 +102,30 @@ export function SettingsPage() {
       toast.error('New password and confirmation do not match');
       return;
     }
+    if (currentPassword === newPassword) {
+      toast.error('New password cannot be the same as your current password');
+      return;
+    }
 
     setIsUpdatingPassword(true);
-    setTimeout(() => {
-      setIsUpdatingPassword(false);
+    try {
+      const res = await authApi.changePassword({ currentPassword, newPassword });
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      toast.success('Password updated successfully');
-    }, 600);
+      toast.success(res.message || 'Password updated successfully');
+    } catch (err: unknown) {
+      let message = 'Failed to update password';
+      if (err && typeof err === 'object' && 'response' in err) {
+        const responseData = (err as { response?: { data?: { message?: string } } }).response?.data;
+        if (responseData?.message) {
+          message = responseData.message;
+        }
+      }
+      toast.error(message);
+    } finally {
+      setIsUpdatingPassword(false);
+    }
   };
 
   const handleAddWebhook = async (e: React.FormEvent) => {

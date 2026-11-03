@@ -105,3 +105,22 @@ export interface WebhookDeliveryLog {
   latencyMs: number;
   createdAt: string;
 }
+
+export interface ForgotPasswordResponse {
+  message: string;
+  identifier: string;
+  maskedEmail: string;
+  resetCode: string;
+  expiresInSeconds: number;
+}
+
+export interface ResetPasswordRequest {
+  identifier: string;
+  resetCode: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}

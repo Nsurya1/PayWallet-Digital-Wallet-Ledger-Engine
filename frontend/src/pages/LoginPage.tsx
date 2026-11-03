@@ -64,8 +64,8 @@ export function LoginPage() {
 
   const handleFillDemo = () => {
     setValue('username', 'rahul');
-    setValue('password', 'password123', { shouldValidate: true });
-    toast.info('Filled demo credentials (rahul)');
+    setValue('password', 'Password123!', { shouldValidate: true });
+    toast.info('Filled demo credentials (rahul / Password123!)');
   };
 
   return (
@@ -134,13 +134,12 @@ export function LoginPage() {
             <span>Remember this device</span>
           </label>
 
-          <button
-            type="button"
-            onClick={() => toast.info('Password recovery is managed by your enterprise administrator.')}
+          <NavLink
+            to="/forgot-password"
             className="text-primary hover:underline font-semibold"
           >
             Forgot password?
-          </button>
+          </NavLink>
         </div>
 
         {/* Submit Button */}

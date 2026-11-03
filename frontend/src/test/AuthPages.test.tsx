@@ -4,6 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
+import { ForgotPasswordPage } from '../pages/ForgotPasswordPage';
 import { PasswordStrengthMeter } from '../components/auth/PasswordStrengthMeter';
 import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { AuthProvider } from '../components/providers/AuthProvider';
@@ -105,6 +106,39 @@ describe('Auth Pages & Password Strength Meter', () => {
       await waitFor(() => {
         expect(screen.getByText('Password strength')).toBeInTheDocument();
         expect(screen.getByText('Strong')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('ForgotPasswordPage Component', () => {
+    const renderForgotPassword = () => {
+      return render(
+        <BrowserRouter>
+          <ThemeProvider>
+            <AuthProvider>
+              <ForgotPasswordPage />
+            </AuthProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      );
+    };
+
+    it('renders Step 1 with identifier input and submit button', () => {
+      renderForgotPassword();
+      expect(screen.getByRole('heading', { name: 'Reset your password' })).toBeInTheDocument();
+      expect(screen.getByLabelText(/Username or Email/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /send reset code/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /auto-fill demo account/i })).toBeInTheDocument();
+    });
+
+    it('auto-fills demo account when clicking chip', async () => {
+      renderForgotPassword();
+      const chip = screen.getByRole('button', { name: /auto-fill demo account/i });
+      fireEvent.click(chip);
+
+      const input = screen.getByLabelText(/Username or Email/i) as HTMLInputElement;
+      await waitFor(() => {
+        expect(input.value).toBe('rahul');
       });
     });
   });

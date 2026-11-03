@@ -10,6 +10,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
+import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { TransferPage } from '@/pages/TransferPage';
 import { TransactionsPage } from '@/pages/TransactionsPage';
@@ -56,6 +57,14 @@ function AppRoutes() {
         element={
           <PublicOnlyRoute>
             <RegisterPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <PublicOnlyRoute>
+            <ForgotPasswordPage />
           </PublicOnlyRoute>
         }
       />
