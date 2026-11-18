@@ -235,16 +235,6 @@ k6 run k6/idempotency_stress_test.js
 
 ---
 
-## 💼 Resume Showcase: Bullet Points
-
-- **High-Throughput Concurrency Control**: Architected a production-grade digital wallet in Java 21 / Spring Boot 3 with dual-strategy locking (Pessimistic `SELECT ... FOR UPDATE` with deterministic lock ordering and Optimistic `@Version` with exponential backoff & full jitter), eliminating race conditions and deadlocks under 1,000+ concurrent transfers.
-- **Immutable Double-Entry Ledger**: Implemented strict append-only double-entry bookkeeping ($\sum \text{Debits} == \sum \text{Credits}$) in PostgreSQL 16 with zero floating-point arithmetic (`BIGINT` minor units) and an automated End-of-Day reconciliation engine detecting balance drift via set-based SQL aggregation.
-- **Dual-Storage Distributed Idempotency**: Engineered a high-performance idempotency filter using Redis 7 (24h TTL cache) and PostgreSQL (atomic claim via `INSERT ... ON CONFLICT DO NOTHING`), guaranteeing exactly-once semantics for mutating financial operations under 50+ concurrent identical requests.
-- **Event-Driven Resilience & Outbox Pattern**: Built an at-least-once Transactional Outbox pattern polling pending events with `SELECT ... FOR UPDATE SKIP LOCKED` into Apache Kafka (KRaft), paired with an idempotent consumer and Resilience4j Circuit Breakers to safely dispatch cryptographic HMAC-SHA256 webhooks to third-party endpoints.
-- **Full-Stack Architecture & Observability**: Delivered a decoupled React 18 SPA with idempotency key preservation on network retries, and configured end-to-end observability with Micrometer, Prometheus, and auto-provisioned Grafana dashboards tracking p99 latencies, lock contention rates, and HikariCP connection pools.
-
----
-
 ## 📄 License
 
 Distributed under the Apache 2.0 License. See `LICENSE` for more information.
